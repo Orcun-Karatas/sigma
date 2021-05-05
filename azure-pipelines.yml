@@ -34,3 +34,7 @@ steps:
     pip install pytest pytest-azurepipelines
     pytest
   displayName: 'pytest'
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: 'Invoke-RestMethod -uri ''https://www.netsparkercloud.com/api/1.0/scans/CreateFromPluginScanRequest'' -ContentType ''application/json; charset=UTF-8'' -Method POST -Headers @{ Authorization = "Basic $([System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes($env:USERID +'':''+$env:APITOKEN)))"} -Body $(@{ WebsiteId=''29bcc583-92c8-4ff3-4924-acaf01766ee5''; ScanType=''FullWithPrimaryProfile''; VcsCommitInfoModel = @{CiBuildConfigurationName = $env:SYSTEM_TEAMPROJECT; CiBuildHasChange = $env:BUILD_SOURCEVERSION; CiBuildId = $env:BUILD_BUILDID; CiBuildUrl= $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI; Committer= $env:BUILD_REQUESTEDFOR; IntegrationSystem = ''AzureDevOps''; VcsName = $env:BUILD_REPOSITORY_PROVIDER; VcsVersion = $env:BUILD_SOURCEVERSION};}| ConvertTo-Json)'
